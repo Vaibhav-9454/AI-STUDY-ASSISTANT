@@ -11,7 +11,15 @@ export async function generate(req, res) {
       });
     }
 
-    const data = await generateStudyKit(notes);
+    const rawData = await generateStudyKit(notes);
+
+    // Remove markdown if Gemini returns it
+    const cleaned = rawData
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    const data = JSON.parse(cleaned);
 
     res.json({
       success: true,
@@ -21,9 +29,9 @@ export async function generate(req, res) {
     console.error("Gemini Error:", error);
 
     res.status(500).json({
-        success: false,
-        message: "Failed to generate study kit",
-        error: error.message,
+      success: false,
+      message: "Failed to generate study kit",
+      error: error.message,
     });
-}
+  }
 }

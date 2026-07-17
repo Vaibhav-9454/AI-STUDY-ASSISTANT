@@ -4,8 +4,10 @@ import dotenv from "dotenv";
 import aiRoutes from "./routes/aiRoutes.js";
 
 dotenv.config();
-console.log(process.env.GEMINI_API_KEY);
-
+console.log(
+  "Gemini Key:",
+  process.env.GEMINI_API_KEY ? "Loaded " : "Missing "
+);
 const app = express();
 
 app.use(cors());

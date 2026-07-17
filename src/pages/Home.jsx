@@ -1,40 +1,91 @@
 import { useState } from "react";
-
-import Navbar from "../components/layout/Navbar";
 import Hero from "../components/home/Hero";
 import InputBox from "../components/home/InputBox";
 
 function Home() {
+  const [studyData, setStudyData] = useState({
+    summary: "",
+    flashcards: [],
+    quiz: [],
+    checklist: [],
+  });
 
-    const [studyData, setStudyData] = useState(null);
+  return (
+    <>
+      <Hero />
 
-    return (
-        <>
-            <Navbar />
+      <InputBox setStudyData={setStudyData} />
 
-            <Hero />
+      {studyData.summary && (
+        <section
+          style={{
+            maxWidth: "900px",
+            margin: "40px auto",
+            padding: "20px",
+          }}
+        >
+          <h2>Summary</h2>
+          <p>{studyData.summary}</p>
 
-            <InputBox
-                setStudyData={setStudyData}
-            />
+          <hr />
 
-            {studyData && (
+          <h2>Flashcards</h2>
 
-                <div>
+          {studyData.flashcards?.map((card, index) => (
+            <div
+              key={index}
+              style={{
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                padding: "12px",
+                marginBottom: "12px",
+              }}
+            >
+              <strong>Q:</strong> {card.question}
+              <br />
+              <strong>A:</strong> {card.answer}
+            </div>
+          ))}
 
-                    <h2>Study Kit Generated</h2>
+          <hr />
 
-                    <pre>
-                        {JSON.stringify(studyData, null, 2)}
-                    </pre>
+          <h2>Quiz</h2>
 
-                </div>
+          {studyData.quiz?.map((question, index) => (
+            <div
+              key={index}
+              style={{
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                padding: "12px",
+                marginBottom: "12px",
+              }}
+            >
+              <h4>{question.question}</h4>
 
-            )}
+              <ul>
+                {question.options.map((option, i) => (
+                  <li key={i}>{option}</li>
+                ))}
+              </ul>
 
-        </>
-    );
+              <strong>Answer:</strong> {question.correctAnswer}
+            </div>
+          ))}
 
+          <hr />
+
+          <h2>Revision Checklist</h2>
+
+          <ul>
+            {studyData.checklist?.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </>
+  );
 }
 
 export default Home;
