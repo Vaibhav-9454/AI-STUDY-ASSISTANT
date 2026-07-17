@@ -2,16 +2,17 @@ function Navbar() {
   return (
     <nav
       style={{
+        background: "#2563eb",
+        color: "white",
+        padding: "18px 40px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "20px 40px",
-        borderBottom: "1px solid #ddd",
       }}
     >
-      <h2>📚 StudyAI</h2>
+      <h2>AI Study Assistant</h2>
 
-      <button>GitHub</button>
+      <span>Powered by Gemini AI</span>
     </nav>
   );
 }

@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Hero from "../components/home/Hero";
 import InputBox from "../components/home/InputBox";
 
 function Home() {
-  const [studyData, setStudyData] = useState({
-    summary: "",
-    flashcards: [],
-    quiz: [],
-    checklist: [],
+  const [studyData, setStudyData] = useState(() => {
+    const saved = localStorage.getItem("studyKit");
+
+    return saved
+      ? JSON.parse(saved)
+      : {
+          summary: "",
+          flashcards: [],
+          quiz: [],
+          checklist: [],
+        };
   });
+
+  useEffect(() => {
+    localStorage.setItem("studyKit", JSON.stringify(studyData));
+  }, [studyData]);
 
   return (
     <>
@@ -25,22 +35,42 @@ function Home() {
           }}
         >
           {/* Summary */}
-          <h2 style={{ textAlign: "center" }}>Summary</h2>
+          <h2
+            style={{
+              textAlign: "center",
+              marginBottom: "20px",
+            }}
+          >
+            📄 Summary
+          </h2>
 
           <p
             style={{
               fontSize: "18px",
               lineHeight: "1.8",
-              textAlign: "center",
+              background: "#f9f9f9",
+              padding: "20px",
+              borderRadius: "10px",
             }}
           >
             {studyData.summary}
           </p>
 
-          <hr />
+          <hr
+            style={{
+              margin: "35px 0",
+            }}
+          />
 
           {/* Flashcards */}
-          <h2 style={{ textAlign: "center" }}>Flashcards</h2>
+          <h2
+            style={{
+              textAlign: "center",
+              marginBottom: "20px",
+            }}
+          >
+            🎴 Flashcards
+          </h2>
 
           {studyData.flashcards?.map((card, index) => (
             <div
@@ -48,25 +78,35 @@ function Home() {
               style={{
                 border: "1px solid #ddd",
                 borderRadius: "10px",
-                padding: "15px",
+                padding: "20px",
                 marginBottom: "15px",
                 background: "#fafafa",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
               }}
             >
-              <h3 style={{ marginBottom: "10px" }}>
-                Q: {card.question}
-              </h3>
+              <h3>{card.question}</h3>
 
               <p>
-                <strong>A:</strong> {card.answer}
+                <strong>Answer:</strong> {card.answer}
               </p>
             </div>
           ))}
 
-          <hr />
+          <hr
+            style={{
+              margin: "35px 0",
+            }}
+          />
 
           {/* Quiz */}
-          <h2 style={{ textAlign: "center", marginTop: "30px" }}>Quiz</h2>
+          <h2
+            style={{
+              textAlign: "center",
+              marginBottom: "20px",
+            }}
+          >
+            ❓ Quiz
+          </h2>
 
           {studyData.quiz?.map((question, index) => (
             <div
@@ -74,19 +114,27 @@ function Home() {
               style={{
                 border: "1px solid #ddd",
                 borderRadius: "10px",
-                padding: "15px",
+                padding: "20px",
                 marginBottom: "20px",
                 background: "#fafafa",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
               }}
             >
-              <h4>
+              <h3>
                 {index + 1}. {question.question}
-              </h4>
+              </h3>
 
               {question.options?.map((option, i) => (
-                <div key={i} style={{ margin: "8px 0" }}>
+                <div
+                  key={i}
+                  style={{
+                    margin: "10px 0",
+                  }}
+                >
                   <input type="radio" disabled />
-                  <label style={{ marginLeft: "8px" }}>{option}</label>
+                  <label style={{ marginLeft: "10px" }}>
+                    {option}
+                  </label>
                 </div>
               ))}
 
@@ -94,23 +142,32 @@ function Home() {
                 style={{
                   color: "green",
                   fontWeight: "bold",
-                  marginTop: "10px",
+                  marginTop: "15px",
                 }}
               >
-                Correct Answer: {question.correctAnswer}
+                ✅ Correct Answer: {question.correctAnswer}
               </p>
             </div>
           ))}
 
-          <hr />
+          <hr
+            style={{
+              margin: "35px 0",
+            }}
+          />
 
-          {/* Revision Checklist */}
-          <h2 style={{ textAlign: "center" }}>Revision Checklist</h2>
+          {/* Checklist */}
+          <h2
+            style={{
+              textAlign: "center",
+              marginBottom: "20px",
+            }}
+          >
+            ✅ Revision Checklist
+          </h2>
 
           <ul
             style={{
-              maxWidth: "700px",
-              margin: "20px auto",
               listStyle: "none",
               padding: 0,
             }}
@@ -119,11 +176,12 @@ function Home() {
               <li
                 key={index}
                 style={{
+                  background: "#f9f9f9",
                   border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  marginBottom: "10px",
-                  background: "#f8f8f8",
+                  borderRadius: "10px",
+                  padding: "15px",
+                  marginBottom: "12px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
                 }}
               >
                 ✅ {item}

@@ -1,40 +1,83 @@
 import { useState } from "react";
+import { generateStudyKit } from "../../services/api";
 
-function InputBox() {
+function InputBox({ setStudyData }) {
   const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleGenerate = async () => {
+    if (!notes.trim()) {
+      setError("Please enter some notes.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+
+      const data = await generateStudyKit(notes);
+
+      setStudyData(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to generate study kit.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section
       style={{
-        width: "80%",
-        margin: "40px auto",
-        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "30px",
       }}
     >
       <textarea
-        rows={12}
-        style={{
-          width: "100%",
-          padding: "15px",
-          fontSize: "16px",
-          borderRadius: "10px",
-        }}
+        rows="12"
         placeholder="Paste your notes here..."
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
+        style={{
+          width: "90%",
+          maxWidth: "900px",
+          padding: "15px",
+          borderRadius: "10px",
+          border: "1px solid #ccc",
+          fontSize: "16px",
+          resize: "vertical",
+        }}
       />
 
-      <p>{notes.length} Characters</p>
+      {error && (
+        <p
+          style={{
+            color: "red",
+            marginTop: "15px",
+          }}
+        >
+          {error}
+        </p>
+      )}
 
       <button
-        disabled={!notes.trim()}
+        onClick={handleGenerate}
+        disabled={loading}
         style={{
-          padding: "15px 30px",
-          cursor: "pointer",
-          marginTop: "10px",
+          marginTop: "20px",
+          padding: "12px 30px",
+          border: "none",
+          borderRadius: "10px",
+          background: "#2563eb",
+          color: "white",
+          fontSize: "16px",
+          cursor: loading ? "not-allowed" : "pointer",
         }}
       >
-        Generate Study Kit
+        {loading ? "Generating..." : "Generate Study Kit"}
       </button>
     </section>
   );
